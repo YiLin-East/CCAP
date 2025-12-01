@@ -2,8 +2,9 @@
 .venv/
 env/
 
-# 生成的股票数据
-stock_data/
+# 生成的股票数据（已提交示例，后续增量数据将被忽略）
+/stock_data/
+!/stock_data/*.json
 
 # Python缓存文件
 __pycache__/
