@@ -1,0 +1,19 @@
+# 项目依赖
+tushare>=1.4.24
+mplfinance>=0.12.7
+pandas>=1.5.0
+numpy>=1.24.0
+
+# 实际股票数据获取库
+# yfinance>=0.2.0
+# akshare>=1.0.0
+# tushare>=1.2.0
+
+# 数据处理库
+# pandas>=1.5.0
+# numpy>=1.24.0
+
+# 可视化库
+# mplfinance>=0.12.7
+# matplotlib>=3.6.0
+# plotly>=5.11.0

@@ -1,0 +1,29 @@
+# 虚拟环境
+.venv/
+env/
+
+# 生成的股票数据
+stock_data/
+
+# Python缓存文件
+__pycache__/
+*.pyc
+
+# IDE配置文件
+.vscode/
+
+# 临时文件
+*.log
+*.tmp
+
+# 数据库文件
+*.db
+
+# 编译产物
+build/
+dist/
+*.egg-info/
+
+# 系统文件
+.DS_Store
+Thumbs.db
