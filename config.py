@@ -1,8 +1,7 @@
 import os
 import json
 
-# TUSHARE_TOKEN = "your_tushare_token_here"
-TUSHARE_TOKEN = "30b77a73f5eec300c95de0f43f791a98291c9d3754cee94150ddd0b9"
+# 
 
 # 数据存储路径
 DATA_DIR = os.path.join(os.getcwd(), "stock_data")
@@ -23,7 +22,7 @@ def load_config(config_file: str = "config.json") -> dict:
     if not os.path.exists(config_file):
         # 如果配置文件不存在，创建默认配置
         default_config = {
-            "tushare_token": TUSHARE_TOKEN,
+            
             "data_dir": DATA_DIR
         }
         with open(config_file, 'w', encoding='utf-8') as f:

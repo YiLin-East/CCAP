@@ -15,18 +15,25 @@ class AdvancedStockFetcher:
     def __init__(self):
         pass  # akshare无需初始化
     
-    def fetch_stock_data(self, symbol, months=6):
+    def fetch_stock_data(self, symbol, months=6, start_date_str=None, end_date_str=None):
         """
         获取指定股票的历史数据
         
         Parameters:
         symbol: 股票代码，如'002050.SZ'
         months: 获取月数，默认6个月
+        start_date_str: 起始日期字符串，格式YYYYMMDD
+        end_date_str: 结束日期字符串，格式YYYYMMDD
         """
         try:
-            # 计算时间范围
-            end_date = datetime.now()
-            start_date = end_date - timedelta(days=months*30)
+            if start_date_str and end_date_str:
+                # 使用用户指定的起止日期
+                start_date = datetime.strptime(start_date_str, '%Y%m%d')
+                end_date = datetime.strptime(end_date_str, '%Y%m%d')
+            else:
+                # 计算时间范围（默认为过去N个月）
+                end_date = datetime.now()
+                start_date = end_date - timedelta(days=months*30)
             
             # 格式化日期
             start_date_str = start_date.strftime('%Y%m%d')
@@ -61,7 +68,8 @@ class AdvancedStockFetcher:
                 "002050.SZ": "三花智控",
                 # 可扩展其他股票映射
             }
-            stock_name = name_map.get(symbol, symbol.split('.')[0])  # 可通过其他方式获取准确名称
+            # 当前不使用股票名称，直接使用代码作为标识
+            stock_name = symbol
             
             # akshare返回的数据已有'日期'列，无需重置索引
             df.rename(columns={'日期': 'trade_date'}, inplace=True)
@@ -74,8 +82,7 @@ class AdvancedStockFetcher:
             df = df.sort_values('trade_date').reset_index(drop=True)
             
             # 计算技术指标，akshare字段名为'收盘'
-            df['ma5'] = df['收盘'].rolling(5).mean()
-            df['ma20'] = df['收盘'].rolling(20).mean()
+
             
             # 转换为字典列表
             data_list = []
@@ -89,14 +96,14 @@ class AdvancedStockFetcher:
                     "volume": int(row['成交量']),  # akshare成交量单位为手，需转换
                     "turnover": float(row['成交额']),  # akshare直接提供成交额
                     "change_percent": float(row['涨跌幅']) if not pd.isna(row['涨跌幅']) else None,  # akshare提供涨跌幅
-                    "ma5": float(row['ma5']) if not pd.isna(row['ma5']) else None,
-                    "ma20": float(row['ma20']) if not pd.isna(row['ma20']) else None
+                    
                 }
                 data_list.append(data_point)
             
             # 构建文件名
             first_date = data_list[0]["date"] if data_list else datetime.now().strftime("%Y%m%d")
-            filename = f"{stock_name}_{symbol}_{first_date}.json"
+            last_date = data_list[-1]["date"] if data_list else datetime.now().strftime("%Y%m%d")
+            filename = f"{symbol}_{first_date}_{last_date}.json"
             filepath = os.path.join(DATA_DIR, filename)
             
             # 增量更新检查
